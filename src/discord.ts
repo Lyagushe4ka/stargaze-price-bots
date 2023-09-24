@@ -1,7 +1,7 @@
 import { Client, GatewayIntentBits, ButtonBuilder, ButtonStyle } from "discord.js";
-import { Collection, getCollections, getSpecificCollection, removeDecimals } from ".";
 import { DISCORD_TOKEN } from "../secrets";
 import { ActionRowBuilder } from "@discordjs/builders";
+import { Collection, getCollections, getSpecificCollection, removeDecimals } from "./helpers";
 
 const discordClient = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 
