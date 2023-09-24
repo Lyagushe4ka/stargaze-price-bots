@@ -1,7 +1,7 @@
 import { Telegraf, Markup } from "telegraf";
 import { message } from "telegraf/filters";
 import { BOT_TOKEN } from "../secrets";
-import { Collection, getCollections, getSpecificCollection, removeDecimals } from "./helpers";
+import { Collection, getCollections, getSpecificCollection, removeDecimals } from "./Helpers";
 
 
 const bot = new Telegraf(BOT_TOKEN);
