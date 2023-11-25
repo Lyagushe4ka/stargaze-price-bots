@@ -51,17 +51,21 @@ async function main() {
 
       const firstName = `[${collectionsData[0].name}](${`https://www.stargaze.zone/m/${collectionsData[0].contractUri}`}):\n`
       const firstFloor = `Floor: ${removeDecimals(collectionsData[0].floorPrice)} $stars`
-      const firstOffer = `${collectionsData[0].highestOffer.price ? `\nHighest offer: ${removeDecimals(collectionsData[0].highestOffer.price ?? 0)} $stars` : ''}`
+      const firstOffer = `${collectionsData[0].highestOffer ? `\nHighest offer: ${removeDecimals(collectionsData[0].highestOffer.price ?? 0)} $stars` : ''}`
       const firstWebsite = `${collectionsData[0].website ? `\nWebsite: ${collectionsData[0].website}` : ''}`
-      const firstCollectionString = `${firstName}${firstFloor}${firstOffer}${firstWebsite}`
+      const firstVolume24Hours = `${collectionsData[0].stats.volume24Hour ? `\nVolume 24h: ${removeDecimals(collectionsData[0].stats.volume24Hour ?? 0)} $stars` : ''}`
+      const firstVolume7Days = `${collectionsData[0].stats.volume7Day ? `\nVolume 7d: ${removeDecimals(collectionsData[0].stats.volume7Day ?? 0)} $stars` : ''}`
+      const firstCollectionString = `${firstName}${firstFloor}${firstOffer}\n${firstVolume24Hours}${firstVolume7Days}${firstWebsite}`
 
       let secondCollectionString = ''
       if (collectionsData.length === 2) {
         const secondName = `\n\n[${collectionsData[1].name}](${`https://www.stargaze.zone/m/${collectionsData[1].contractUri}`}):\n`
         const secondFloor = `Floor: ${removeDecimals(collectionsData[1].floorPrice)} $stars`
-        const secondOffer = `${collectionsData[1].highestOffer.price ? `\nHighest offer: ${removeDecimals(collectionsData[1].highestOffer.price ?? 0)} $stars` : ''}`
+        const secondOffer = `${collectionsData[1].highestOffer ? `\nHighest offer: ${removeDecimals(collectionsData[1].highestOffer.price ?? 0)} $stars` : ''}`
         const secondWebsite = `${collectionsData[1].website ? `\nWebsite: ${collectionsData[1].website}` : ''}`
-        secondCollectionString = `${secondName}${secondFloor}${secondOffer}${secondWebsite}`
+        const secondVolume24Hours = `${collectionsData[1].stats.volume24Hour ? `\nVolume 24h: ${removeDecimals(collectionsData[1].stats.volume24Hour ?? 0)} $stars` : ''}`
+        const secondVolume7Days = `${collectionsData[1].stats.volume7Day ? `\nVolume 7d: ${removeDecimals(collectionsData[1].stats.volume7Day ?? 0)} $stars` : ''}`
+        secondCollectionString = `${secondName}${secondFloor}${secondOffer}\n${secondVolume24Hours}${secondVolume7Days}${secondWebsite}`
       }
 
       message.reply(`${firstCollectionString}${secondCollectionString}`);
@@ -69,14 +73,14 @@ async function main() {
     } else {
 
       const buttons = collectionsData.map((value) => {
-        return new ButtonBuilder().setCustomId(value.name).setLabel(value.name).setStyle(ButtonStyle.Primary);
+        return new ButtonBuilder().setCustomId(value.contractAddress).setLabel(value.name).setStyle(ButtonStyle.Primary);
       })
 
       let rows = [];
       for (let i = 0; i < buttons.length; i += 3) {
         rows.push(new ActionRowBuilder<ButtonBuilder>().addComponents(buttons.slice(i, i + 3)));
       }
-
+      console.log(rows);
       message.reply({ content: 'Select collection', components: [...rows] });
 
     }
@@ -90,7 +94,7 @@ async function main() {
 
     const { customId } = interaction;
 
-    let collection = collectionsDataHistory.find((value) => value.name === customId);
+    let collection = collectionsDataHistory.find((value) => value.contractAddress === customId);
 
     // if timestamp is older than 5 seconds, ignore
     if (collection && collection.timestamp && Date.now() - collection.timestamp > 5000) {
@@ -100,11 +104,13 @@ async function main() {
     if (collection) {
       const name = `[${collection.name}](${`https://www.stargaze.zone/m/${collection.contractUri}`}):\n`
       const floor = `Floor: ${removeDecimals(collection.floorPrice)} $stars`
-      const offer = `${collection.highestOffer.price ? `\nHighest offer: ${removeDecimals(collection.highestOffer.price ?? 0)} $stars` : ''}`
+      const offer = `${collection.highestOffer ? `\nHighest offer: ${removeDecimals(collection.highestOffer.price ?? 0)} $stars` : ''}`
       const website = `${collection.website ? `\nWebsite: ${collection.website}` : ''}`
+      const volume24Hours = `${collection.stats.volume24Hour ? `\nVolume 24h: ${removeDecimals(collection.stats.volume24Hour ?? 0)} $stars` : ''}`
+      const volume7Days = `${collection.stats.volume7Day ? `\nVolume 7d: ${removeDecimals(collection.stats.volume7Day ?? 0)} $stars` : ''}`
 
       interaction.message.delete();
-      await interaction.reply(`${name}${floor}${offer}${website}`);
+      await interaction.reply(`${name}${floor}${offer}\n${volume24Hours}${volume7Days}${website}`);
     } else {
       interaction.message.delete();
       await interaction.reply('Collection not found');

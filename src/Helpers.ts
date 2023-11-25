@@ -11,6 +11,10 @@ export type Collection = {
   }
   contractUri: string;
   contractAddress: string;
+  stats: {
+    volume24Hour: string;
+    volume7Day: string;
+  }
   timestamp: number;
 }
 
@@ -27,6 +31,10 @@ export const querySearchCollection = `
         }
         contractUri
         contractAddress
+        stats {
+          volume24Hour
+          volume7Day
+        }
       }
     }
   }
@@ -44,6 +52,10 @@ export const querySpecificCollection = `
       }
       contractUri
       contractAddress
+      stats {
+        volume24Hour
+        volume7Day
+      }
     }
   }
 `
