@@ -68,7 +68,7 @@ async function main() {
         secondCollectionString = `${secondName}${secondFloor}${secondOffer}\n${secondVolume24Hours}${secondVolume7Days}${secondWebsite}`
       }
 
-      message.reply(`${firstCollectionString}${secondCollectionString}`);
+      message.reply({content: `${firstCollectionString}${secondCollectionString}`, flags: 'SuppressEmbeds',});
 
     } else {
 
@@ -110,7 +110,7 @@ async function main() {
       const volume7Days = `${collection.stats.volume7Day ? `\nVolume 7d: ${removeDecimals(collection.stats.volume7Day ?? 0)} $stars` : ''}`
 
       interaction.message.delete();
-      await interaction.reply(`${name}${floor}${offer}\n${volume24Hours}${volume7Days}${website}`);
+      await interaction.reply({content: `${name}${floor}${offer}\n${volume24Hours}${volume7Days}${website}`, flags: 'SuppressEmbeds',});
     } else {
       interaction.message.delete();
       await interaction.reply('Collection not found');
